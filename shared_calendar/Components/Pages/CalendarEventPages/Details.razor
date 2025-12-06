@@ -1,0 +1,52 @@
+﻿@page "/calendarevents/details"
+@using Microsoft.EntityFrameworkCore
+@using shared_calendar.Models
+@inject IDbContextFactory<shared_calendar.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>CalendarEvent</h2>
+    <hr />
+    @if (calendarevent is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">StartTime</dt>
+            <dd class="col-sm-10">@calendarevent.StartTime</dd>
+            <dt class="col-sm-2">EndTime</dt>
+            <dd class="col-sm-10">@calendarevent.EndTime</dd>
+            <dt class="col-sm-2">Title</dt>
+            <dd class="col-sm-10">@calendarevent.Title</dd>
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@calendarevent.Description</dd>
+        </dl>
+        <div>
+            <a href="@($"/calendarevents/edit?id={calendarevent.id}")">Edit</a> |
+            <a href="@($"/calendarevents")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private CalendarEvent? calendarevent;
+
+    [SupplyParameterFromQuery]
+    private int id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        calendarevent = await context.CalendarEvent.FirstOrDefaultAsync(m => m.id == id);
+
+        if (calendarevent is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

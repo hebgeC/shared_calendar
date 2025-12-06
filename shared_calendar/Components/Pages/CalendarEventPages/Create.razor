@@ -1,0 +1,67 @@
+﻿@page "/calendarevents/create"
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using shared_calendar.Components.CustomComponents
+@using shared_calendar.Models
+@using MudBlazor
+@inject IDbContextFactory<shared_calendar.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>CalendarEvent</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="CalendarEvent" OnValidSubmit="AddCalendarEvent" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="starttime" class="form-label">StartTime:</label>
+                <TimePicker @bind-SelectedTime="CalendarEvent.StartTime" />
+                <ValidationMessage For="() => CalendarEvent.StartTime" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="endtime" class="form-label">EndTime:</label>
+                <TimePicker @bind-SelectedTime="CalendarEvent.EndTime" />
+                <ValidationMessage For="() => CalendarEvent.EndTime" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="title" class="form-label">Title:</label> 
+                <InputText id="title" @bind-Value="CalendarEvent.Title" class="form-control" /> 
+                <ValidationMessage For="() => CalendarEvent.Title" class="text-danger" /> 
+            </div>        
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label> 
+                <InputText id="description" @bind-Value="CalendarEvent.Description" class="form-control" /> 
+                <ValidationMessage For="() => CalendarEvent.Description" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/calendarevents">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private CalendarEvent CalendarEvent { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddCalendarEvent()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.CalendarEvent.Add(CalendarEvent);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/calendarevents");
+    }
+
+    public string test { get; set; }
+}

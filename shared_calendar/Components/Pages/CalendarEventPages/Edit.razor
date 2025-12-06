@@ -1,0 +1,106 @@
+﻿@page "/calendarevents/edit"
+@using Microsoft.EntityFrameworkCore
+@using shared_calendar.Components.CustomComponents
+@using shared_calendar.Models
+@using MudBlazor
+@inject IDbContextFactory<shared_calendar.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>CalendarEvent</h2>
+<hr />
+@if (CalendarEvent is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="CalendarEvent" OnValidSubmit="UpdateCalendarEvent" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="CalendarEvent.id" value="@CalendarEvent.id" />
+                <div class="mb-3">
+                    <label for="starttime" class="form-label">StartTime:</label>
+                    <TimePicker @bind-SelectedTime="CalendarEvent.StartTime"/>
+                    <ValidationMessage For="() => CalendarEvent.StartTime" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="endtime" class="form-label">EndTime:</label>
+                    <TimePicker @bind-SelectedTime="CalendarEvent.EndTime" />
+                    <ValidationMessage For="() => CalendarEvent.EndTime" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title:</label>
+                    <InputText id="title" @bind-Value="CalendarEvent.Title" class="form-control" />
+                    <ValidationMessage For="() => CalendarEvent.Title" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description:</label>
+                    <InputText id="description" @bind-Value="CalendarEvent.Description" class="form-control" />
+                    <ValidationMessage For="() => CalendarEvent.Description" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/calendarevents">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int id { get; set; }
+
+    [SupplyParameterFromForm]
+    private CalendarEvent? CalendarEvent { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        CalendarEvent ??= await context.CalendarEvent.FirstOrDefaultAsync(m => m.id == id);
+
+        if (CalendarEvent is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateCalendarEvent()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(CalendarEvent!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!CalendarEventExists(CalendarEvent!.id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/calendarevents");
+    }
+
+    private bool CalendarEventExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.CalendarEvent.Any(e => e.id == id);
+    }
+}

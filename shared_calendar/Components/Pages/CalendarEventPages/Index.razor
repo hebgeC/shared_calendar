@@ -1,0 +1,39 @@
+﻿@page "/calendarevents"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using shared_calendar.Models
+@using shared_calendar.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<shared_calendar.Data.ApplicationDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="calendarevents/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.CalendarEvent">
+    <PropertyColumn Property="calendarevent => calendarevent.StartTime" />
+    <PropertyColumn Property="calendarevent => calendarevent.EndTime" />
+    <PropertyColumn Property="calendarevent => calendarevent.Title" />
+    <PropertyColumn Property="calendarevent => calendarevent.Description" />
+
+    <TemplateColumn Context="calendarevent">
+        <a href="@($"calendarevents/edit?id={calendarevent.id}")">Edit</a> |
+        <a href="@($"calendarevents/details?id={calendarevent.id}")">Details</a> |
+        <a href="@($"calendarevents/delete?id={calendarevent.id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private ApplicationDbContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
