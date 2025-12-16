@@ -5,7 +5,8 @@ namespace shared_calendar.Models
     public class CalendarEvent
     {
         public CalendarEvent() 
-        { 
+        {
+            this.date = DateTime.Now;
             this.endTime = TimeOnly.FromDateTime(DateTime.Now);
             this.startTime = TimeOnly.FromDateTime(DateTime.Now);
             this.Title = string.Empty;
@@ -14,8 +15,22 @@ namespace shared_calendar.Models
 
         private TimeOnly startTime;
         private TimeOnly endTime;
+        private DateTime date;
 
         public int id { get; set; }
+
+        public DateTime? Date 
+        {
+            get
+            {
+                return this.date;
+            }
+            set
+            {
+                this.date = (DateTime)value;
+            }
+        }
+
         public string StartTime 
         {
             get

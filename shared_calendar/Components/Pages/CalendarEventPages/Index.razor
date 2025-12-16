@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using shared_calendar.Models
 @using shared_calendar.Data
+@rendermode InteractiveServer
 @implements IAsyncDisposable
 @inject IDbContextFactory<shared_calendar.Data.ApplicationDbContext> DbFactory
 
@@ -15,6 +16,7 @@
 </p>
 
 <QuickGrid Class="table" Items="context.CalendarEvent">
+    <PropertyColumn Property="calendarevent => calendarevent.Date" />
     <PropertyColumn Property="calendarevent => calendarevent.StartTime" />
     <PropertyColumn Property="calendarevent => calendarevent.EndTime" />
     <PropertyColumn Property="calendarevent => calendarevent.Title" />
@@ -33,6 +35,7 @@
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
+        // context.CalendarEvent.Load();
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();

@@ -24,21 +24,31 @@ else
                 <DataAnnotationsValidator />
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="CalendarEvent.id" value="@CalendarEvent.id" />
+
+                <div class="mb-3">
+                    @* <MudDatePicker Label="" @bind-Date="CalendarEvent.Date"/> *@
+                    <MudDatePicker Label="Date" @bind-Date="CalendarEvent.Date" />
+                    <ValidationMessage For="() => CalendarEvent.Date" class="text-danger" />
+                </div>
+
                 <div class="mb-3">
                     <label for="starttime" class="form-label">StartTime:</label>
                     <TimePicker @bind-SelectedTime="CalendarEvent.StartTime"/>
                     <ValidationMessage For="() => CalendarEvent.StartTime" class="text-danger" />
                 </div>
+
                 <div class="mb-3">
                     <label for="endtime" class="form-label">EndTime:</label>
                     <TimePicker @bind-SelectedTime="CalendarEvent.EndTime" />
                     <ValidationMessage For="() => CalendarEvent.EndTime" class="text-danger" />
                 </div>
+
                 <div class="mb-3">
                     <label for="title" class="form-label">Title:</label>
                     <InputText id="title" @bind-Value="CalendarEvent.Title" class="form-control" />
                     <ValidationMessage For="() => CalendarEvent.Title" class="text-danger" />
                 </div>
+
                 <div class="mb-3">
                     <label for="description" class="form-label">Description:</label>
                     <InputText id="description" @bind-Value="CalendarEvent.Description" class="form-control" />

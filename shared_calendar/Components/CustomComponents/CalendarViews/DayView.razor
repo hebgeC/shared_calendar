@@ -1,0 +1,68 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using MudBlazor
+@using shared_calendar.Data
+@using shared_calendar.Models
+@implements IAsyncDisposable
+@inject IDbContextFactory<shared_calendar.Data.ApplicationDbContext> DbFactory
+<h3>Day View</h3>
+
+<MudGrid Spacing="0" Justify="Justify.Center">
+    @for (int hour = 0; hour < 24; hour++)
+    {
+        <MudItem xs="12">
+            <MudPaper Class="pa-2" Outlined="true">
+
+                <div class="d-flex justify-space-between">
+                    <strong>@hour:00</strong>
+                </div>
+                
+                @foreach (var item in context.CalendarEvent)
+                {
+                    DateTime itemDate = item.Date.GetValueOrDefault();
+                    
+                    if (itemDate.Date == this.date.Date)
+                    {
+                        // event is scheduled for currently selected day
+                    
+                        TimeOnly itemStartTime;
+
+                        if (!TimeOnly.TryParse(item.StartTime, out itemStartTime))
+                        {
+                            continue;
+                        }
+
+                        if (itemStartTime.Hour == hour) // event starts within this hour
+                        {
+                            // render event that starts in this hour
+                            // TODO eventItem component
+                            // for now just use a colored shapr or something idk
+
+                            <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" Class="mt-2">
+                                @item.Title
+                            </MudChip>
+                        }
+
+                    }
+                }
+
+            </MudPaper>
+        </MudItem>
+    }
+</MudGrid>
+
+    @code {
+
+    [Parameter]
+    public DateTime date { get; set; }
+
+    private List<CalendarEvent> eventsForTheDay = new();
+    private ApplicationDbContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        this.context = DbFactory.CreateDbContext();
+        this.eventsForTheDay = context.CalendarEvent.ToList();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

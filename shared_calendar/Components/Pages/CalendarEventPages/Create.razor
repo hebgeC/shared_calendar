@@ -18,6 +18,13 @@
         <EditForm method="post" Model="CalendarEvent" OnValidSubmit="AddCalendarEvent" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
+
+            <div class="mb-3">
+                @* <MudDatePicker Label="" @bind-Date="CalendarEvent.Date"/> *@
+                <MudDatePicker Label="Date" @bind-Date="CalendarEvent.Date"/>
+                <ValidationMessage For="() => CalendarEvent.Date" class="text-danger" />
+            </div>
+
             <div class="mb-3">
                 <label for="starttime" class="form-label">StartTime:</label>
                 <TimePicker @bind-SelectedTime="CalendarEvent.StartTime" />
@@ -62,6 +69,4 @@
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/calendarevents");
     }
-
-    public string test { get; set; }
 }
