@@ -2,8 +2,7 @@
 @using MudBlazor
 @using shared_calendar.Data
 @using shared_calendar.Models
-@implements IAsyncDisposable
-@inject IDbContextFactory<shared_calendar.Data.ApplicationDbContext> DbFactory
+@inject EventManager manager;
 <h3>Day View</h3>
 
 <MudGrid Spacing="0" Justify="Justify.Center">
@@ -16,32 +15,23 @@
                     <strong>@hour:00</strong>
                 </div>
                 
-                @foreach (var item in context.CalendarEvent)
+                @foreach (var item in eventsForTheDay)
                 {
-                    DateTime itemDate = item.Date.GetValueOrDefault();
-                    
-                    if (itemDate.Date == this.date.Date)
+                    if (item.StartTime.Contains(hour.ToString()))
                     {
-                        // event is scheduled for currently selected day
-                    
-                        TimeOnly itemStartTime;
-
-                        if (!TimeOnly.TryParse(item.StartTime, out itemStartTime))
-                        {
-                            continue;
-                        }
-
-                        if (itemStartTime.Hour == hour) // event starts within this hour
-                        {
-                            // render event that starts in this hour
-                            // TODO eventItem component
-                            // for now just use a colored shapr or something idk
-
-                            <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" Class="mt-2">
-                                @item.Title
-                            </MudChip>
-                        }
-
+                        <MudCard Class="my-2" Style="background-color:lightblue;">
+                            <MudCardContent>
+                                <div>
+                                    <strong>@item.Title</strong>
+                                </div>
+                                <div>
+                                    @item.StartTime:00 - @item.EndTime:00
+                                </div>
+                                <div>
+                                    @item.Description
+                                </div>
+                            </MudCardContent>
+                        </MudCard>
                     }
                 }
 
@@ -54,15 +44,11 @@
 
     [Parameter]
     public DateTime date { get; set; }
-
     private List<CalendarEvent> eventsForTheDay = new();
-    private ApplicationDbContext context = default!;
 
     protected override void OnInitialized()
     {
-        this.context = DbFactory.CreateDbContext();
-        this.eventsForTheDay = context.CalendarEvent.ToList();
+        DateOnly dateOnly = DateOnly.FromDateTime(this.date);
+        eventsForTheDay = manager.GetEvents(dateOnly);
     }
-
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }

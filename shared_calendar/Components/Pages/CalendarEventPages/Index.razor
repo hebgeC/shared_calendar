@@ -4,8 +4,6 @@
 @using shared_calendar.Models
 @using shared_calendar.Data
 @rendermode InteractiveServer
-@* @implements IAsyncDisposable *@
-@* @inject IDbContextFactory<shared_calendar.Data.ApplicationDbContext> DbFactory *@
 @inject EventManager manager
 
 <PageTitle>Index</PageTitle>
@@ -31,15 +29,10 @@
 </QuickGrid>
 
 @code {
-    // private ApplicationDbContext context = default!;
-
-    // private EventManager manager = new();
     private IQueryable<CalendarEvent> events;
 
     protected override void OnInitialized()
     {
         this.events = manager.GetEvents().AsQueryable();
     }
-
-    // public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }

@@ -5,6 +5,7 @@
 @using MudBlazor
 @inject IDbContextFactory<shared_calendar.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject EventManager manager
 
 <PageTitle>Edit</PageTitle>
 
@@ -26,7 +27,6 @@ else
                 <input type="hidden" name="CalendarEvent.id" value="@CalendarEvent.id" />
 
                 <div class="mb-3">
-                    @* <MudDatePicker Label="" @bind-Date="CalendarEvent.Date"/> *@
                     <MudDatePicker Label="Date" @bind-Date="CalendarEvent.Date" />
                     <ValidationMessage For="() => CalendarEvent.Date" class="text-danger" />
                 </div>
