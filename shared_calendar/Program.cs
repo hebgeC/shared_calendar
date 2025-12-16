@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
+using shared_calendar;
 using shared_calendar.Components;
 using shared_calendar.Components.Account;
 using shared_calendar.Data;
@@ -17,6 +18,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+builder.Services.AddScoped<EventManager>();
 
 builder.Services.AddAuthentication(options =>
     {

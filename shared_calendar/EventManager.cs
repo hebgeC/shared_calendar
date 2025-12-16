@@ -9,20 +9,22 @@ namespace shared_calendar
 {
     public class EventManager
     {
-        private ApplicationDbContext? context = default;
-        private IDbContextFactory<shared_calendar.Data.ApplicationDbContext> DbFactory;
+        private IDbContextFactory<shared_calendar.Data.ApplicationDbContext> _dbFactory;
 
-        public EventManager()
+        public EventManager(IDbContextFactory<ApplicationDbContext> dbFactory)
         {
-            this.context = DbFactory.CreateDbContext();
-            if (this.context == null)
-            {
-                throw new Exception("Failed to create database context");
-            }
+            this._dbFactory = dbFactory;
         }
 
+        public List<CalendarEvent> GetEvents()
+        {
+            using var context = _dbFactory.CreateDbContext();
+            return context.CalendarEvent.ToList();
+        }
+        
         public List<CalendarEvent> GetEvents(string title)
         {
+            using var context = _dbFactory.CreateDbContext();
             IQueryable<CalendarEvent> query = from eventItem in context.CalendarEvent 
                                               where eventItem.Title == title
                                               select eventItem;
@@ -38,6 +40,7 @@ namespace shared_calendar
         {
             // handle if either param is null. if endtime is null, then search only by starttime
 
+            using var context = _dbFactory.CreateDbContext();
             IQueryable<CalendarEvent> query;
          
             if (startTime == null && endTime == null)
@@ -69,6 +72,7 @@ namespace shared_calendar
 
         public List<CalendarEvent> GetEvents(DateOnly date)
         {
+            using var context = _dbFactory.CreateDbContext();
             IQueryable<CalendarEvent> query = from eventItem in context.CalendarEvent
                                               where eventItem.Date.ToString().Contains(date.ToString())
                                               select eventItem;
@@ -77,6 +81,7 @@ namespace shared_calendar
 
         public List<CalendarEvent> GetEvents(DateOnly date, TimeOnly? startTime, TimeOnly? endTime)
         {
+            using var context = _dbFactory.CreateDbContext();
             IQueryable<CalendarEvent> query;
 
             if (startTime == null && endTime == null)
@@ -111,6 +116,7 @@ namespace shared_calendar
 
         public List<CalendarEvent> GetEvents(DateOnly date, TimeOnly? startTime, TimeOnly? endTime, string title)
         {
+            using var context = _dbFactory.CreateDbContext();
             IQueryable<CalendarEvent> query;
 
             if (startTime == null && endTime == null) // search via date, title
