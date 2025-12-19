@@ -22,14 +22,14 @@
             <div class="mb-3">
                 <label for="StartDateTime" class="form-label"></label>
                 <h3>Start</h3>
-                <DateTimePicker @bind-Date="CalendarEvent.StartDateTime" />
+                <DateTimePicker @bind-SelectedDateTime="CalendarEvent.StartDateTime" />
                 <ValidationMessage For="() => CalendarEvent.StartDateTime" class="text-danger" />
             </div>
 
             <div class="mb-3">
                 <label for="EndDateTime" class="form-label"></label>
                 <h3>End</h3>
-                <DateTimePicker @bind-Date="CalendarEvent.EndDateTime" />
+                <DateTimePicker @bind-SelectedDateTime="CalendarEvent.EndDateTime" />
                 <ValidationMessage For="() => CalendarEvent.EndDateTime" class="text-danger" />
             </div>
 

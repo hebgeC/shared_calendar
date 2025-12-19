@@ -6,8 +6,6 @@
 </div>
 
 @code {
-
-    // private DateTime selectedDateTime = DateTime.Now;
     private DateTime? date = DateTime.Now;
     private string time = string.Empty;
 
@@ -27,7 +25,7 @@
         set
         {
             this.Date = value.Date;
-            this.SelectedTime = $"{value.Hour}:{value.Minute} {value.Second}";
+            this.SelectedTime = $"{value.Hour}:{value.Minute}";
             this.SelectedDateTimeChanged.InvokeAsync(SelectedDateTime);
         }
     }
