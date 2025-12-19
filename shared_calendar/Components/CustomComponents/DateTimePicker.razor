@@ -1,0 +1,22 @@
+﻿@using MudBlazor
+
+<h3>DateTimePicker</h3>
+
+<div>
+    <MudDatePicker Label="Date" @bind-Date="Date" />
+    <TimePicker @bind-SelectedTime="SelectedTime" />
+</div>
+
+@code {
+    [Parameter]
+    public DateTime? Date { get; set; }
+
+    [Parameter]
+    public EventCallback<DateTime?> DateChanged { get; set; }
+
+    [Parameter]
+    public string SelectedTime { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> SelectedTimeChanged { get; set; }
+}

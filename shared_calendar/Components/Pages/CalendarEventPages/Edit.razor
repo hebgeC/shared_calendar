@@ -27,20 +27,15 @@ else
                 <input type="hidden" name="CalendarEvent.id" value="@CalendarEvent.id" />
 
                 <div class="mb-3">
-                    <MudDatePicker Label="Date" @bind-Date="CalendarEvent.Date" />
-                    <ValidationMessage For="() => CalendarEvent.Date" class="text-danger" />
+                    <label for="StartDateTime" class="form-label">StartDateTime:</label>
+                    <DateTimePicker @bind-Value="CalendarEvent.StartDateTime" Class="form-control" />
+                    <ValidationMessage For="() => CalendarEvent.StartDateTime" class="text-danger" />
                 </div>
 
                 <div class="mb-3">
-                    <label for="starttime" class="form-label">StartTime:</label>
-                    <TimePicker @bind-SelectedTime="CalendarEvent.StartTime"/>
-                    <ValidationMessage For="() => CalendarEvent.StartTime" class="text-danger" />
-                </div>
-
-                <div class="mb-3">
-                    <label for="endtime" class="form-label">EndTime:</label>
-                    <TimePicker @bind-SelectedTime="CalendarEvent.EndTime" />
-                    <ValidationMessage For="() => CalendarEvent.EndTime" class="text-danger" />
+                    <label for="EndDateTime" class="form-label">EndDateTime:</label>
+                    <DateTimePicker @bind-Value="CalendarEvent.EndDateTime" Class="form-control" />
+                    <ValidationMessage For="() => CalendarEvent.EndDateTime" class="text-danger" />
                 </div>
 
                 <div class="mb-3">
@@ -54,6 +49,7 @@ else
                     <InputText id="description" @bind-Value="CalendarEvent.Description" class="form-control" />
                     <ValidationMessage For="() => CalendarEvent.Description" class="text-danger" />
                 </div>
+
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
         </div>

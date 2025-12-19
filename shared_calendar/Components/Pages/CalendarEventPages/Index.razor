@@ -15,9 +15,8 @@
 </p>
 
 <QuickGrid Class="table" TGridItem="CalendarEvent" Items="@events">
-    <PropertyColumn Property="calendarevent => calendarevent.Date" />
-    <PropertyColumn Property="calendarevent => calendarevent.StartTime" />
-    <PropertyColumn Property="calendarevent => calendarevent.EndTime" />
+    <PropertyColumn Property="calendarevent => calendarevent.StartDateTime" />
+    <PropertyColumn Property="calendarevent => calendarevent.EndDateTime" />
     <PropertyColumn Property="calendarevent => calendarevent.Title" />
     <PropertyColumn Property="calendarevent => calendarevent.Description" />
 

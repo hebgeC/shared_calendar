@@ -17,7 +17,7 @@
                 
                 @foreach (var item in eventsForTheDay)
                 {
-                    if (item.StartTime.Contains(hour.ToString()))
+                    if (item.StartDateTime.Hour == hour) // check if an event occurs in this hour 
                     {
                         <MudCard Class="my-2" Style="background-color:lightblue;">
                             <MudCardContent>
@@ -25,7 +25,7 @@
                                     <strong>@item.Title</strong>
                                 </div>
                                 <div>
-                                    @item.StartTime:00 - @item.EndTime:00
+                                    @item.StartDateTime:0Date0 - @item.EndDateTime:00
                                 </div>
                                 <div>
                                     @item.Description
@@ -48,7 +48,6 @@
 
     protected override void OnInitialized()
     {
-        DateOnly dateOnly = DateOnly.FromDateTime(this.date);
-        eventsForTheDay = manager.GetEvents(dateOnly);
+        eventsForTheDay = manager.GetEvents(DateTime.Now, null);
     }
 }
