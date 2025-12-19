@@ -27,14 +27,16 @@ else
                 <input type="hidden" name="CalendarEvent.id" value="@CalendarEvent.id" />
 
                 <div class="mb-3">
-                    <label for="StartDateTime" class="form-label">StartDateTime:</label>
-                    <DateTimePicker @bind-Value="CalendarEvent.StartDateTime" Class="form-control" />
+                    <label for="StartDateTime" class="form-label"></label>
+                    <h3>Start</h3>
+                    <DateTimePicker @bind-Date="CalendarEvent.StartDateTime" />
                     <ValidationMessage For="() => CalendarEvent.StartDateTime" class="text-danger" />
                 </div>
 
                 <div class="mb-3">
-                    <label for="EndDateTime" class="form-label">EndDateTime:</label>
-                    <DateTimePicker @bind-Value="CalendarEvent.EndDateTime" Class="form-control" />
+                    <label for="EndDateTime" class="form-label"></label>
+                    <h3>End</h3>
+                    <DateTimePicker @bind-Date="CalendarEvent.EndDateTime" />
                     <ValidationMessage For="() => CalendarEvent.EndDateTime" class="text-danger" />
                 </div>
 

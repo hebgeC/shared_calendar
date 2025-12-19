@@ -1,21 +1,64 @@
 ﻿@using MudBlazor
 
-<h3>DateTimePicker</h3>
-
 <div>
     <MudDatePicker Label="Date" @bind-Date="Date" />
     <TimePicker @bind-SelectedTime="SelectedTime" />
 </div>
 
 @code {
-    [Parameter]
-    public DateTime? Date { get; set; }
+
+    // private DateTime selectedDateTime = DateTime.Now;
+    private DateTime? date = DateTime.Now;
+    private string time = string.Empty;
 
     [Parameter]
-    public EventCallback<DateTime?> DateChanged { get; set; }
+    public DateTime SelectedDateTime
+    {
+        get
+        {
+            TimeOnly selectedTime;
+            if (TimeOnly.TryParse(this.time, out selectedTime))
+            {
+                return new DateTime(DateOnly.FromDateTime(this.Date.GetValueOrDefault().Date), selectedTime);
+            }
+
+            return DateTime.Now;
+        }
+        set
+        {
+            this.Date = value.Date;
+            this.SelectedTime = $"{value.Hour}:{value.Minute} {value.Second}";
+            this.SelectedDateTimeChanged.InvokeAsync(SelectedDateTime);
+        }
+    }
 
     [Parameter]
-    public string SelectedTime { get; set; } = string.Empty;
+    public DateTime? Date
+    { 
+        get { return this.date; }
+        set
+        {
+            this.date = value;
+            this.DateChanged.InvokeAsync(Date.GetValueOrDefault());
+        }
+    }
+
+    [Parameter]
+    public string SelectedTime
+    {
+        get { return this.time; }
+        set
+        {
+            this.time = value;
+            this.SelectedTimeChanged.InvokeAsync(SelectedTime);
+        }
+    }
+
+    [Parameter]
+    public EventCallback<DateTime> SelectedDateTimeChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<DateTime> DateChanged { get; set; }
 
     [Parameter]
     public EventCallback<string> SelectedTimeChanged { get; set; }

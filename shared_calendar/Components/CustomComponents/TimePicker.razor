@@ -54,36 +54,36 @@
     [Parameter]
     public string SelectedHour 
     { 
-        get { return selectedHour; }
+        get { return this.selectedHour; }
 
         set
         {
-            selectedHour = value;
-            NotifyTimeChanged();
+            this.selectedHour = value;
+            this.NotifyTimeChanged();
         }
     }
 
     [Parameter]
     public string SelectedMinute
     {
-        get { return selectedMinute; }
+        get { return this.selectedMinute; }
 
         set
         {
-            selectedMinute = value;
-            NotifyTimeChanged();
+            this.selectedMinute = value;
+            this.NotifyTimeChanged();
         }
     }
 
     [Parameter]
     public string SelectedPeriod
     {
-        get { return selectedPeriod; }
+        get { return this.selectedPeriod; }
 
         set
         {
-            selectedPeriod = value;
-            NotifyTimeChanged();
+            this.selectedPeriod = value;
+            this.NotifyTimeChanged();
         }
     }
 
