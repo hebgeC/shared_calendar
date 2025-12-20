@@ -7,25 +7,22 @@
 
 @code {
     private DateTime? date = DateTime.Now;
-    private string time = string.Empty;
+    private TimeOnly time = TimeOnly.MinValue;
 
     [Parameter]
     public DateTime SelectedDateTime
     {
         get
         {
-            TimeOnly selectedTime;
-            if (TimeOnly.TryParse(this.time, out selectedTime))
-            {
-                return new DateTime(DateOnly.FromDateTime(this.Date.GetValueOrDefault().Date), selectedTime);
-            }
-
-            return DateTime.Now;
+            Console.WriteLine(new DateTime(DateOnly.FromDateTime(this.Date.GetValueOrDefault().Date), this.SelectedTime));
+            return new DateTime(DateOnly.FromDateTime(this.Date.GetValueOrDefault().Date), this.SelectedTime);
         }
+
         set
         {
+            Console.WriteLine($"Setting SelectedDateTime: {value}");
             this.Date = value.Date;
-            this.SelectedTime = $"{value.Hour}:{value.Minute}";
+            this.SelectedTime = new TimeOnly(value.Hour, value.Minute);
             this.SelectedDateTimeChanged.InvokeAsync(SelectedDateTime);
         }
     }
@@ -34,21 +31,25 @@
     public DateTime? Date
     { 
         get { return this.date; }
+
         set
         {
             this.date = value;
             this.DateChanged.InvokeAsync(Date.GetValueOrDefault());
+            this.SelectedDateTimeChanged.InvokeAsync(this.SelectedDateTime);
         }
     }
 
     [Parameter]
-    public string SelectedTime
+    public TimeOnly SelectedTime
     {
         get { return this.time; }
+
         set
         {
             this.time = value;
             this.SelectedTimeChanged.InvokeAsync(SelectedTime);
+            this.SelectedDateTimeChanged.InvokeAsync(this.SelectedDateTime);
         }
     }
 
@@ -59,5 +60,5 @@
     public EventCallback<DateTime> DateChanged { get; set; }
 
     [Parameter]
-    public EventCallback<string> SelectedTimeChanged { get; set; }
+    public EventCallback<TimeOnly> SelectedTimeChanged { get; set; }
 }

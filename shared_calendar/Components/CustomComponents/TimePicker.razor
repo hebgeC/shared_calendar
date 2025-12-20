@@ -88,22 +88,27 @@
     }
 
     [Parameter]
-    public string SelectedTime
+    public TimeOnly SelectedTime
     {
-        get => $"{SelectedHour}:{SelectedMinute} {SelectedPeriod}";
+        get
+        {
+            int hour, minute;
+
+            int.TryParse(this.SelectedHour, out hour);
+            int.TryParse(this.SelectedMinute, out minute);
+
+            return new TimeOnly(hour, minute);
+        }
+
         set
         {
-            if (string.IsNullOrEmpty(value)) return;
-            var parts = value.Split(' ');
-            if (parts.Length != 2) return;
-            SelectedPeriod = parts[1];
-            var timeParts = parts[0].Split(':');
-            SelectedHour = timeParts[0];
-            SelectedMinute = timeParts[1];
+            this.SelectedHour = value.Hour.ToString();
+            this.SelectedMinute = value.Minute.ToString();
+            
             NotifyTimeChanged();
         }
     }
 
     [Parameter]
-    public EventCallback<string> SelectedTimeChanged { get; set; }
+    public EventCallback<TimeOnly> SelectedTimeChanged { get; set; }
 }
