@@ -1,4 +1,5 @@
 ﻿@using MudBlazor
+@* returns DateTime obj that represents the date and time of and event specified by the user *@
 
 <div>
     <MudDatePicker Label="Date" @bind-Date="Date" />
@@ -7,22 +8,20 @@
 
 @code {
     private DateTime? date = DateTime.Now;
-    private TimeOnly time = TimeOnly.MinValue;
+    private TimeOnly time = TimeOnly.FromDateTime(DateTime.Now);
 
     [Parameter]
     public DateTime SelectedDateTime
     {
         get
         {
-            Console.WriteLine(new DateTime(DateOnly.FromDateTime(this.Date.GetValueOrDefault().Date), this.SelectedTime));
             return new DateTime(DateOnly.FromDateTime(this.Date.GetValueOrDefault().Date), this.SelectedTime);
         }
 
         set
         {
-            Console.WriteLine($"Setting SelectedDateTime: {value}");
             this.Date = value.Date;
-            this.SelectedTime = new TimeOnly(value.Hour, value.Minute);
+            this.SelectedTime = TimeOnly.FromDateTime(value); // this sets the time to military time 
             this.SelectedDateTimeChanged.InvokeAsync(SelectedDateTime);
         }
     }
@@ -48,7 +47,7 @@
         set
         {
             this.time = value;
-            this.SelectedTimeChanged.InvokeAsync(SelectedTime);
+            this.SelectedTimeChanged.InvokeAsync(this.SelectedTime);
             this.SelectedDateTimeChanged.InvokeAsync(this.SelectedDateTime);
         }
     }

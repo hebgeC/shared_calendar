@@ -1,5 +1,6 @@
 ﻿@using MudBlazor
-@* TimePicker *@
+@using System.Text.RegularExpressions
+@* returns TimeOnly obj representing a time specififed by the user *@
 <div>
     <MudStack Row Class="justify-space-between mud-width-full">
         <MudSelect T="string" @bind-Value="SelectedHour" Label="Hour" Class="mud-width-50">
@@ -96,15 +97,24 @@
 
             int.TryParse(this.SelectedHour, out hour);
             int.TryParse(this.SelectedMinute, out minute);
-
-            return new TimeOnly(hour, minute);
+            var ret = new TimeOnly(hour, minute);
+            return ret;
         }
 
         set
         {
-            this.SelectedHour = value.Hour.ToString();
-            this.SelectedMinute = value.Minute.ToString();
-            
+            // parse TimeOnly vlaue into 12-hour format string
+            string formatted = value.ToString("hh:mm tt");
+
+            var match = Regex.Match(
+                formatted,
+               @"^0?(?<hour>1[0-2]|[1-9]):(?<min>[0-5][0-9])\s(?<ampm>AM|PM)$"
+            );
+
+            this.SelectedHour = match.Groups["hour"].Value;
+            this.SelectedMinute = match.Groups["min"].Value;
+            this.SelectedPeriod = match.Groups["ampm"].Value;
+
             NotifyTimeChanged();
         }
     }
