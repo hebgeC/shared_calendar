@@ -6,13 +6,26 @@
 <h3>Day View</h3>
 
 <MudGrid Spacing="0" Justify="Justify.Center">
-    @for (int hour = 0; hour < 24; hour++)
+    @foreach (var (hour, index) in hours.Select((val, i) => (val, i)))
     {
+        int displayHour = hour % 12;
+        if (hour == 12 || hour == 24)
+        {
+            displayHour = 12;
+        }
+
         <MudItem xs="12">
             <MudPaper Class="pa-2" Outlined="true">
 
                 <div class="d-flex justify-space-between">
-                    <strong>@hour:00</strong>
+                    @if (index < 12)
+                    {
+                        <strong>@displayHour AM</strong>
+                    }
+                    else
+                    {
+                        <strong>@displayHour PM</strong>
+                    }
                 </div>
                 
                 @foreach (var item in eventsForTheDay)
@@ -25,7 +38,7 @@
                                     <strong>@item.Title</strong>
                                 </div>
                                 <div>
-                                    @item.StartDateTime:0Date0 - @item.EndDateTime:00
+                                    @item.StartDateTime.ToShortTimeString() - @item.EndDateTime.ToShortTimeString()
                                 </div>
                                 <div>
                                     @item.Description
@@ -42,12 +55,18 @@
 
     @code {
 
+    List<int> hours { get; set; } = new List<int>
+    {
+        12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+    };
+
     [Parameter]
     public DateTime date { get; set; }
     private List<CalendarEvent> eventsForTheDay = new();
 
     protected override void OnInitialized()
     {
-        eventsForTheDay = manager.GetEvents(DateTime.Now, null);
+        eventsForTheDay = manager.GetEvents(DateTime.Now);
+        Console.WriteLine($"num events: {eventsForTheDay.Count}");
     }
 }

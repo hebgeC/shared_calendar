@@ -103,5 +103,17 @@ namespace shared_calendar
 
             return query.ToList();
         }
+
+        public List<CalendarEvent> GetEvents(DateTime startDate)
+        {
+            using var context = _dbFactory.CreateDbContext();
+            IQueryable<CalendarEvent> query;
+
+            query = from eventItem in context.CalendarEvent
+                     where eventItem.StartDateTime.Date == startDate.Date
+                     select eventItem;
+
+            return query.ToList();
+        }
     }
 }
