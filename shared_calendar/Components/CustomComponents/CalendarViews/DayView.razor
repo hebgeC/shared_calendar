@@ -2,75 +2,66 @@
 @using MudBlazor
 @using shared_calendar.Data
 @using shared_calendar.Models
-@inject EventManager manager;
+@inject EventManager manager
+
 <h3>Day View</h3>
 
-<MudGrid Spacing="0" Justify="Justify.Center" Class="day-view">
-    @foreach (var (hour, index) in hours.Select((val, i) => (val, i)))
-    {
-        int displayHour = hour % 12;
-        if (hour == 12 || hour == 24)
+<div class="day-view-container">
+
+    <!-- Hour grid -->
+    <div class="hours-column">
+        @foreach (var (hour, index) in hours.Select((val, i) => (val, i)))
         {
-            displayHour = 12;
-        }
+            int displayHour = hour % 12;
+            if (hour == 12 || hour == 24)
+            {
+                displayHour = 12;
+            }
 
-        <MudItem xs="12">
-            <MudPaper Class="hour-row" Outlined="true" Square="true">
-
-                <div class="hour-label">
-                    @if (index < 12)
-                    {
-                        <span>@displayHour AM</span>
-                    }
-                    else
-                    {
-                        <span>@displayHour PM</span>
-                    }
-                </div>
-
-                @foreach (var item in eventsForTheDay)
+            <div class="hour-row">
+                @if (index < 12)
                 {
-                    DateTime hourStart = item.StartDateTime.Date.AddHours(index);
-                    DateTime hourEnd = hourStart.AddHours(1);
-
-                    if (item.StartDateTime < hourEnd && item.EndDateTime > hourStart)
-                    {
-                        DateTime visibleStart = item.StartDateTime > hourStart
-                        ? item.StartDateTime
-                        : hourStart;
-
-                        DateTime visibleEnd = item.EndDateTime < hourEnd
-                        ? item.EndDateTime
-                        : hourEnd;
-
-                        String topPx = $"{visibleStart.Minute}px";
-                        String heightPx = $"{(visibleEnd - visibleStart).TotalMinutes}px";
-
-                        <div class="event-block"
-                             style="top:@topPx; height:@heightPx;">
-                            @item.Title
-                        </div>
-                    }
+                    <span>@displayHour AM</span>
                 }
+                else
+                {
+                    <span>@displayHour PM</span>
+                }
+            </div>
+        }
+    </div>
 
+    <!-- Events overlay -->
+    <div class="events-layer">
+        @foreach (var item in eventsForTheDay)
+        {
+            int startMinutes = item.StartDateTime.Hour * 60 + item.StartDateTime.Minute; // where the event starts (in minutes) relative to the top of the calendar
+            double durationMinutes = (item.EndDateTime - item.StartDateTime).TotalMinutes;
 
-            </MudPaper>
-        </MudItem>
-    }
-</MudGrid>
+            <div class="event-block"
+                 style="
+                 top:@($"{startMinutes}px");
+                 height:@($"{durationMinutes}px");
+            ">
+                <h5>@item.Title</h5>
+                <p>@item.Description</p>
+            </div>
+        }
+    </div>
 
+</div>
 
-    @code {
+@code {
 
-    string popoverHeight = "50%";
-
-    List<int> hours { get; set; } = new List<int>
+    List<int> hours { get; set; } = new()
     {
-        12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+        12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+        12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
     };
 
     [Parameter]
     public DateTime date { get; set; }
+
     private List<CalendarEvent> eventsForTheDay = new();
 
     protected override void OnInitialized()
