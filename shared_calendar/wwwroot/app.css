@@ -58,3 +58,51 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+/* START CUSTOM CSS - DAY_VIEW */
+
+.day-view {
+    width: 100%;
+}
+
+/* Hour container */
+.hour-row {
+    position: relative;
+    height: 60px;
+    padding-left: 80px;
+    background-color: #fafafa;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Hour label (left side) */
+.hour-label {
+    position: absolute;
+    left: 8px;
+    top: 6px;
+    width: 64px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+/* Event block */
+.event-block {
+    position: absolute;
+    left: 88px;
+    right: 12px;
+    background: linear-gradient(135deg, #1e88e5, #1565c0);
+    color: white;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    cursor: pointer;
+}
+
+    /* Optional hover polish */
+    .event-block:hover {
+        filter: brightness(1.08);
+    }

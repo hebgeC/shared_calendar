@@ -5,7 +5,7 @@
 @inject EventManager manager;
 <h3>Day View</h3>
 
-<MudGrid Spacing="0" Justify="Justify.Center">
+<MudGrid Spacing="0" Justify="Justify.Center" Class="day-view">
     @foreach (var (hour, index) in hours.Select((val, i) => (val, i)))
     {
         int displayHour = hour % 12;
@@ -15,45 +15,54 @@
         }
 
         <MudItem xs="12">
-            <MudPaper Class="pa-2" Outlined="true">
+            <MudPaper Class="hour-row" Outlined="true" Square="true">
 
-                <div class="d-flex justify-space-between">
+                <div class="hour-label">
                     @if (index < 12)
                     {
-                        <strong>@displayHour AM</strong>
+                        <span>@displayHour AM</span>
                     }
                     else
                     {
-                        <strong>@displayHour PM</strong>
+                        <span>@displayHour PM</span>
                     }
                 </div>
-                
+
                 @foreach (var item in eventsForTheDay)
                 {
-                    if (item.StartDateTime.Hour == hour) // check if an event occurs in this hour 
+                    DateTime hourStart = item.StartDateTime.Date.AddHours(index);
+                    DateTime hourEnd = hourStart.AddHours(1);
+
+                    if (item.StartDateTime < hourEnd && item.EndDateTime > hourStart)
                     {
-                        <MudCard Class="my-2" Style="background-color:lightblue;">
-                            <MudCardContent>
-                                <div>
-                                    <strong>@item.Title</strong>
-                                </div>
-                                <div>
-                                    @item.StartDateTime.ToShortTimeString() - @item.EndDateTime.ToShortTimeString()
-                                </div>
-                                <div>
-                                    @item.Description
-                                </div>
-                            </MudCardContent>
-                        </MudCard>
+                        DateTime visibleStart = item.StartDateTime > hourStart
+                        ? item.StartDateTime
+                        : hourStart;
+
+                        DateTime visibleEnd = item.EndDateTime < hourEnd
+                        ? item.EndDateTime
+                        : hourEnd;
+
+                        String topPx = $"{visibleStart.Minute}px";
+                        String heightPx = $"{(visibleEnd - visibleStart).TotalMinutes}px";
+
+                        <div class="event-block"
+                             style="top:@topPx; height:@heightPx;">
+                            @item.Title
+                        </div>
                     }
                 }
+
 
             </MudPaper>
         </MudItem>
     }
 </MudGrid>
 
+
     @code {
+
+    string popoverHeight = "50%";
 
     List<int> hours { get; set; } = new List<int>
     {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.ComponentModel;
 
 namespace shared_calendar.Models
 {
@@ -10,6 +11,8 @@ namespace shared_calendar.Models
             this.EndDateTime = DateTime.Now;
             this.Title = string.Empty;
             this.Description = string.Empty;
+
+            
         }
 
         public int id { get; set; }
