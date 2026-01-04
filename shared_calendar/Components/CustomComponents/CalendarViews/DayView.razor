@@ -4,17 +4,23 @@
 @using shared_calendar.Models
 @inject EventManager manager
 
-<MudPaper>
-    <MudButton OnClick="prevDay">
-        Prev
-    </MudButton>
+<MudGrid Spacing="20" Justify="Justify.Center" >
+    <MudItem>
+        <MudButton OnClick="prevDay">
+            Prev
+        </MudButton>
+    </MudItem>
 
-    <MudDatePicker @bind-Date="Date" />
+    <MudItem>
+        <MudDatePicker @bind-Date="Date" />
+    </MudItem>
 
-    <MudButton OnClick="nextDay"> 
-        Next
-    </MudButton>
-</MudPaper>
+    <MudItem>
+        <MudButton OnClick="nextDay">
+            Next
+        </MudButton>
+    </MudItem>
+</MudGrid>
 
 <div class="day-view-container">
 
@@ -81,7 +87,7 @@
             this.date = value;
             eventsForTheDay = manager.GetEvents(this.Date.GetValueOrDefault());
         }
-
+ 
     }
 
     private List<CalendarEvent> eventsForTheDay = new();
