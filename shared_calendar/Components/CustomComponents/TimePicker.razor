@@ -93,12 +93,8 @@
     {
         get
         {
-            int hour, minute;
-
-            int.TryParse(this.SelectedHour, out hour);
-            int.TryParse(this.SelectedMinute, out minute);
-            var ret = new TimeOnly(hour, minute);
-            return ret;
+            string s = $"{this.SelectedHour}:{this.SelectedMinute} {this.SelectedPeriod}";
+            return TimeOnly.ParseExact(s, "h:mm tt");
         }
 
         set

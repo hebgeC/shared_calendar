@@ -22,6 +22,7 @@
         {
             this.Date = value.Date;
             this.SelectedTime = TimeOnly.FromDateTime(value); // this sets the time to military time 
+
             this.SelectedDateTimeChanged.InvokeAsync(SelectedDateTime);
         }
     }
