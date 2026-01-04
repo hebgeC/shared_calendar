@@ -4,23 +4,25 @@
 @using shared_calendar.Models
 @inject EventManager manager
 
-<MudGrid Spacing="20" Justify="Justify.Center" >
+<MudGrid Spacing="20" Justify="Justify.Center">
     <MudItem>
-        <MudButton OnClick="prevDay">
+        <MudButton OnClick="prevDay" Color="Color.Primary" Variant="Variant.Filled">
             Prev
         </MudButton>
     </MudItem>
 
     <MudItem>
-        <MudDatePicker @bind-Date="Date" />
+        <MudDatePicker @bind-Date="Date" Color="Color.Primary" Variant="Variant.Outlined"/>
     </MudItem>
 
     <MudItem>
-        <MudButton OnClick="nextDay">
+        <MudButton OnClick="nextDay" Color="Color.Primary" Variant="Variant.Filled">
             Next
         </MudButton>
     </MudItem>
 </MudGrid>
+
+<div style="height: 10px"></div>
 
 <div class="day-view-container">
 
