@@ -3,9 +3,30 @@
 @using shared_calendar.Data
 @using shared_calendar.Models
 @inject EventManager manager
+@inject IDialogService DialogService
 <h3>WeekView</h3>
 @* show each day throughout the week. each day should show the events that are scheduled on that day. 
 click on the day to go to the DayView of that day to show events in more detail *@
+
+<MudGrid Justify="Justify.Center">
+    <MudItem>
+        <MudButton OnClick="PrevWeek" Color="Color.Primary" Variant="Variant.Filled">
+            Prev
+        </MudButton>
+    </MudItem>
+
+    <MudItem>
+        <MudDatePicker @bind-Date="Date" Color="Color.Primary" Variant="Variant.Outlined" />
+    </MudItem>
+
+    <MudItem>
+        <MudButton OnClick="NextWeek" Color="Color.Primary" Variant="Variant.Filled">
+            Next
+        </MudButton>
+    </MudItem>
+</MudGrid>
+
+<div style="height: 10px"></div>
 
 <div class="day-view-container">
 
@@ -46,12 +67,12 @@ click on the day to go to the DayView of that day to show events in more detail 
 
             <!-- Event Block -->
 
-            @foreach (var item in dayEvents)
+            @foreach (CalendarEvent item in dayEvents)
             {
                 int startMinutes = item.StartDateTime.Hour * 60 + item.StartDateTime.Minute + 60; // where the event starts (in minutes) relative to the top of the calendar
                 double durationMinutes = (item.EndDateTime - item.StartDateTime).TotalMinutes;
 
-                <div class="event-block"
+                <div @onclick="() => EventClicked(item.id)" class="event-block"
                         style="
                                 top:@($"{startMinutes}px");
                                 height:@($"{durationMinutes}px");
@@ -111,6 +132,22 @@ click on the day to go to the DayView of that day to show events in more detail 
         this.LoadWeekEvents();
     }
 
+    private async Task EventClicked(int id)
+    {
+        var parameters = new DialogParameters<EventDialog>
+        {
+            { "Id", id }
+        };
+
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true
+        };
+
+        DialogService.Show<EventDialog>("Simple Dialog", parameters, options);
+    }
+
+
     private void LoadWeekEvents()
     {
         this.weekDates.Clear();
@@ -133,5 +170,15 @@ click on the day to go to the DayView of that day to show events in more detail 
             List<CalendarEvent> t = manager.GetEvents(day);
             eventsForTheWeek.Add(t);
         }
+    }
+
+    private void PrevWeek()
+    {
+        this.Date = this.Date.GetValueOrDefault().AddDays(-7);
+    }
+
+    private void NextWeek()
+    {
+        this.Date = this.Date.GetValueOrDefault().AddDays(7);
     }
 }

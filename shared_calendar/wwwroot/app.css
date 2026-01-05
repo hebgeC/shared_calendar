@@ -98,4 +98,17 @@ h1:focus {
     font-size: 0.75rem;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     width: 100%;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease, transform 0.1s ease, background-color 0.15s ease;
+}
+
+.event-block:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transform: translateY(-1px);
+    background-color: #1565c0;
+}
+
+.event-block:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
