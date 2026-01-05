@@ -70,6 +70,8 @@ h1:focus {
 
 .hours-column {
     width: 100%;
+    border: 1px solid #ddd;
+    position: relative;
 }
 
 .hour-row {

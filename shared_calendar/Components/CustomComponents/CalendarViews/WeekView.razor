@@ -1,7 +1,137 @@
-﻿<h3>WeekView</h3>
+﻿@using Microsoft.EntityFrameworkCore
+@using MudBlazor
+@using shared_calendar.Data
+@using shared_calendar.Models
+@inject EventManager manager
+<h3>WeekView</h3>
 @* show each day throughout the week. each day should show the events that are scheduled on that day. 
 click on the day to go to the DayView of that day to show events in more detail *@
 
+<div class="day-view-container">
+
+    <!-- Hour Column -->
+    <div class="hours-column">
+
+        <div class="hour-row"></div>
+
+        @foreach (var (hour, index) in hours.Select((val, i) => (val, i)))
+        {
+            int displayHour = hour % 12;
+            if (hour == 12 || hour == 24)
+            {
+                displayHour = 12;
+            }
+
+            <div class="hour-row">
+                @if (index < 12)
+                {
+                    <span>@displayHour AM</span>
+                }
+                else
+                {
+                    <span>@displayHour PM</span>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Day columns -->
+    @foreach (var pair in days) // each column in the grid
+    {
+        string day = pair.Value;
+        int dayEnum = pair.Key;
+        List<CalendarEvent> dayEvents = this.eventsForTheWeek[dayEnum];
+
+        <div class="hours-column">
+
+            <!-- Event Block -->
+
+            @foreach (var item in dayEvents)
+            {
+                int startMinutes = item.StartDateTime.Hour * 60 + item.StartDateTime.Minute + 60; // where the event starts (in minutes) relative to the top of the calendar
+                double durationMinutes = (item.EndDateTime - item.StartDateTime).TotalMinutes;
+
+                <div class="event-block"
+                        style="
+                                top:@($"{startMinutes}px");
+                                height:@($"{durationMinutes}px");
+                        ">
+                    <h5>@item.Title</h5>
+                    <p>@item.Description</p>
+                </div>
+            }
+            
+
+            <div class="hour-row">
+                @day
+                @this.weekDates[dayEnum].ToShortDateString()
+            </div>
+            @foreach (int hour in hours)
+            {
+                <div class="hour-row">
+
+                </div>
+            }
+        </div>
+    }
+</div>
+
 @code {
 
+    List<int> hours { get; set; } = new()
+    {
+        12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+        12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+    };
+
+    Dictionary<int, string> days { get; set; } = new()
+    {
+        { 0, "Sun" }, { 1, "Mon" }, { 2, "Tue" }, { 3, "Wed" }, { 4, "Thu" }, { 5, "Fri" }, { 6, "Sat" }
+    };
+
+    private List<List<CalendarEvent>> eventsForTheWeek = new();
+    private List<DateTime> weekDates = new();
+
+    private DateTime? date = DateTime.Now;
+
+    [Parameter]
+    public DateTime? Date
+    {
+        get { return this.date; }
+
+        set
+        {
+            this.date = value;
+            this.LoadWeekEvents();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        this.LoadWeekEvents();
+    }
+
+    private void LoadWeekEvents()
+    {
+        this.weekDates.Clear();
+        this.eventsForTheWeek.Clear();
+
+        // get the current week
+        this.weekDates.Add(this.Date.GetValueOrDefault().AddHours(-(int)this.Date.GetValueOrDefault().DayOfWeek));
+
+        DateTime prevDay = this.weekDates[0];
+
+        for (int i = 1; i < 7; ++i)
+        {
+            this.weekDates.Add(prevDay.AddDays(1));
+            prevDay = this.weekDates.Last();
+        }
+
+        // get list of events for each day of the week
+        foreach (DateTime day in this.weekDates)
+        {
+            List<CalendarEvent> t = manager.GetEvents(day);
+            eventsForTheWeek.Add(t);
+        }
+    }
 }
