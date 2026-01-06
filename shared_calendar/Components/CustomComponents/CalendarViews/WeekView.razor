@@ -70,17 +70,20 @@ click on the day to go to the DayView of that day to show events in more detail 
             </div>
 
             <!-- Event Block -->
-
             @foreach (CalendarEvent item in dayEvents)
             {
-                int startMinutes = item.StartDateTime.Hour * 60 + item.StartDateTime.Minute + 60; // where the event starts (in minutes) relative to the top of the calendar
+                int startMinutes = item.StartDateTime.Hour * 60 + item.StartDateTime.Minute + 60;
                 double durationMinutes = (item.EndDateTime - item.StartDateTime).TotalMinutes;
+                int width = 100;
 
                 <div @onclick="() => EventClicked(item.id)" class="event-block"
-                        style="
-                                top:@($"{startMinutes}px");
-                                height:@($"{durationMinutes}px");
-                        ">
+                        style=
+                        "
+                        top:@($"{startMinutes}px");
+                        height:@($"{durationMinutes}px");
+                        width:@($"{width}%");
+                        "
+                >
                     <h5>@item.Title</h5>
                     <p>@item.Description</p>
                 </div>
@@ -145,7 +148,7 @@ click on the day to go to the DayView of that day to show events in more detail 
             CloseOnEscapeKey = true
         };
 
-        DialogService.Show<EventDialog>("Simple Dialog", parameters, options);
+        await DialogService.ShowAsync<EventDialog>("Simple Dialog", parameters, options);
     }
 
 
@@ -155,7 +158,9 @@ click on the day to go to the DayView of that day to show events in more detail 
         this.eventsForTheWeek.Clear();
 
         // get the current week
-        this.weekDates.Add(this.Date.GetValueOrDefault().AddHours(-(int)this.Date.GetValueOrDefault().DayOfWeek));
+        var d = this.Date.GetValueOrDefault();
+        var dow = d.DayOfWeek;
+        this.weekDates.Add(d.AddDays(-(int)dow));
 
         DateTime prevDay = this.weekDates[0];
 
