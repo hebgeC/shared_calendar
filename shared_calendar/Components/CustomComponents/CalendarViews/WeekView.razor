@@ -4,7 +4,6 @@
 @using shared_calendar.Models
 @inject EventManager manager
 @inject IDialogService DialogService
-<h3>WeekView</h3>
 @* show each day throughout the week. each day should show the events that are scheduled on that day. 
 click on the day to go to the DayView of that day to show events in more detail *@
 
@@ -65,6 +64,11 @@ click on the day to go to the DayView of that day to show events in more detail 
 
         <div class="hours-column">
 
+            <div class="hour-row">
+                @day
+                @this.weekDates[dayEnum].ToShortDateString()
+            </div>
+
             <!-- Event Block -->
 
             @foreach (CalendarEvent item in dayEvents)
@@ -81,12 +85,7 @@ click on the day to go to the DayView of that day to show events in more detail 
                     <p>@item.Description</p>
                 </div>
             }
-            
 
-            <div class="hour-row">
-                @day
-                @this.weekDates[dayEnum].ToShortDateString()
-            </div>
             @foreach (int hour in hours)
             {
                 <div class="hour-row">
@@ -96,6 +95,8 @@ click on the day to go to the DayView of that day to show events in more detail 
         </div>
     }
 </div>
+
+<div calss="spacer" style="height: 30px;"></div>
 
 @code {
 

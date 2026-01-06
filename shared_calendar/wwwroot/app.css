@@ -42,9 +42,9 @@ h1:focus {
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
@@ -64,7 +64,7 @@ h1:focus {
 .day-view-container {
     position: relative;
     display: flex;
-    height: 1440px; /* 24 hours * 60 minutes */
+    height: 1500px; /* 24 hours * 60 minutes */
     border: 1px solid #ddd;
 }
 
@@ -91,21 +91,26 @@ h1:focus {
 
 .event-block {
     position: absolute;
-    background-color: #1976d2;
-    color: white;
-    padding: 4px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     width: 100%;
+    /*    background: #635cf7;*/
+    background: #948fff;
+    color: #ffffff;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
     cursor: pointer;
-    transition: box-shadow 0.15s ease, transform 0.1s ease, background-color 0.15s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 10px;
 }
 
 .event-block:hover {
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     transform: translateY(-1px);
-    background-color: #1565c0;
+    filter: brightness(1.1);
 }
 
 .event-block:active {
