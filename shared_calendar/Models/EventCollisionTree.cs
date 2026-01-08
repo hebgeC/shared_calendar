@@ -81,7 +81,6 @@
             this.getEventCollisions(root.Right, list, ++index);
             return;
         }
-
     }
 
     internal class Node
