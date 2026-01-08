@@ -11,8 +11,6 @@ namespace shared_calendar.Models
             this.EndDateTime = DateTime.Now;
             this.Title = string.Empty;
             this.Description = string.Empty;
-
-            
         }
 
         public int id { get; set; }
