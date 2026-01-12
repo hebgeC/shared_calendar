@@ -1,4 +1,6 @@
-﻿namespace shared_calendar.Models
+﻿using System.Reflection.Metadata;
+
+namespace shared_calendar.Models
 {
     public class EventCollisionTree
     {
@@ -18,6 +20,14 @@
             }
 
             this.add(e, this.root);
+        }
+
+        public void AddEnumerable(IEnumerable<CalendarEvent> items)
+        {
+            foreach (var item in items)
+            {
+                this.Add(item);
+            }
         }
 
         private void add(CalendarEvent e, Node root)
